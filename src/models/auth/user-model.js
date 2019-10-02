@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const capabilities = {
+  user: [ 'create','read','update','delete' ],
+  admin: [ 'create','read','update','delete' ],
+};
+
 //user Schema
 const user = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -42,12 +47,26 @@ user.methods.comparePassword = function(password){
 };
 
 //statics: user lookup & authenticate bearer
+user.statics.authBearer = function(credentials){
+  let payload = jwt.verify(credentials, process.env.SECRET).id;
+  return this.findById(payload)
+    .then(user => {
+      return user ? user : null;
+    })
+    .catch(error => console.log('Bearer Auth:', error));
+};
+
+// flesh out front end first
+// user.methods.can = function(){
+//   return capabilities[this.role]
+// };
 
 // generate token
 user.methods.generateToken = function () {
   let payload = { id: this._id };
+  let options = {};
   // jwt.sign( payload, secret, options);
-  return jwt.sign( payload, process.env.SECRET );
+  return jwt.sign( payload, process.env.SECRET, options );
 };
 
 module.exports = mongoose.model('user', user );

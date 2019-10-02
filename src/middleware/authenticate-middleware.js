@@ -6,12 +6,15 @@ const authenticate = function(request, response, next){
   let path = request.originalUrl.split( '/' )[1];
   let [ authType, authCredentials ] = request.headers.authorization.split(' ');
   authType = authType.toLowerCase();
-  if (authType === 'basic' && path === 'signin') {
-    return authenticateBasic(authCredentials);
+  try {
+    if (authType === 'basic' && path === 'signin') {
+      return authenticateBasic(authCredentials);
+    } else if (authType === 'bearer'){
+      return authenticateBearer(authCredentials);
+    } else response.send('Could not authenticate.');
+  } catch (error){
+    next(error);
   }
-  //else if (authType === 'token'){
-  //  return authenticateBearer(authCredentials);
-  //}
 
   //unbuffer, lookup with user static authbasic
   function authenticateBasic(credentials){
@@ -34,8 +37,19 @@ const authenticate = function(request, response, next){
     return { username, password };
   }
 
-  //authenticateBearer
-  //function authenticateBearer(token){}
+  // authenticateBearer
+  function authenticateBearer(token){
+    return User.authBearer(token)
+      .then(user => {
+        if(user){
+          request.user = user;
+          next();
+        } else {
+          response.send('Invalid credentials');
+        }
+      })
+      .catch(error => authError(error));
+  }
 
   function authError(error){
     console.log('Authentication Error:', error);
