@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const capabilities = {
-  user: [ 'create','read','update','delete' ],
-  admin: [ 'create','read','update','delete' ],
-};
+// const capabilities = {
+//   user: [ 'create','read','update','delete' ],
+//   admin: [ 'create','read','update','delete' ],
+// };
 
 //user Schema
 const user = new mongoose.Schema({

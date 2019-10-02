@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+// eslint-disable-next-line new-cap
 const authRoute = express.Router();
 const authenticate = require('../../middleware/authenticate-middleware');
 let User = require('../../models/auth/user-model');
