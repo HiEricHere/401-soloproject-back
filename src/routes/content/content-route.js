@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+// eslint-disable-next-line new-cap
 const contentRoute = express.Router();
 const schema = require('../../models/test/test-model');
 const Crud = require('../../models/crud');
