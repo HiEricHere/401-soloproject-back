@@ -8,6 +8,7 @@ const cors = require('cors');
 const notFound = require('./middleware/not-found');
 const errorHandler = require('./middleware/errorHandler');
 const authRoute = require('../src/routes/auth/auth-route');
+const contentRoute = require('../src/routes/content/content-route');
 
 //misc middleware
 app.use(morgan('dev'));
@@ -17,6 +18,7 @@ app.use(express.urlencoded({extended:true}));
 
 //routes
 app.use(authRoute);
+app.use(contentRoute);
 app.get('/', (req,res)=>{res.send('im aliiiiiive');});
 
 //error middleware

@@ -23,7 +23,7 @@ const authenticate = function(request, response, next){
     return User.authBasic(unBufferedCredentials)
       .then( user => {
         if(user){
-          request.user = user;
+          request.user = user._id;
           request.token = user.generateToken();
           next();
         }
@@ -42,7 +42,8 @@ const authenticate = function(request, response, next){
     return User.authBearer(token)
       .then(user => {
         if(user){
-          request.user = user;
+          request.user = user._id;
+          request.cookie('access_pass', token);
           next();
         } else {
           response.send('Invalid credentials');
