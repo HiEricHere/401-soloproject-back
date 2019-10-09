@@ -8,6 +8,7 @@ const cors = require('cors');
 const notFound = require('./middleware/not-found');
 const errorHandler = require('./middleware/errorHandler');
 const authRoute = require('../src/routes/auth/auth-route');
+const contentRoute = require('../src/routes/content/content-route');
 
 //misc middleware
 app.use(morgan('dev'));
@@ -17,7 +18,7 @@ app.use(express.urlencoded({extended:true}));
 
 //routes
 app.use(authRoute);
-app.get('/', (req,res)=>{res.send('im aliiiiiive');});
+app.use(contentRoute);
 
 //error middleware
 app.use('*', notFound);
@@ -28,7 +29,7 @@ module.exports = {
   start: (port) => {
     let PORT = port || process.env.PORT || 8080;
     app.listen(PORT, () => {
-      console.log(`BATTLECRUISER OPERATIONAL: ${PORT}`);
+      console.log(`💻➰➰${PORT}➰➰🔋`);
     });
   },
 };

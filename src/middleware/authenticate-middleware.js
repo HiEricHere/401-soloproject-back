@@ -21,12 +21,13 @@ const authenticate = function(request, response, next){
     let unBufferedCredentials = unBuffer(credentials);
     //unBufferedCredentials = {username,password}
     return User.authBasic(unBufferedCredentials)
-      .then( user => {
-        if(user){
-          request.user = user;
+      .then( response => {
+        if(response.status){
+          const user = response.payload;
+          request.user = { id: user._id, username: user.username };
           request.token = user.generateToken();
           next();
-        }
+        } else authError(response.payload);
       })
       .catch( error => authError(error));
   }
@@ -41,8 +42,9 @@ const authenticate = function(request, response, next){
   function authenticateBearer(token){
     return User.authBearer(token)
       .then(user => {
-        if(user){
-          request.user = user;
+        if(user._id === request.params.userID){
+          request.user = user._id;
+          request.cookie('access_pass', token);
           next();
         } else {
           response.send('Invalid credentials');
@@ -52,7 +54,7 @@ const authenticate = function(request, response, next){
   }
 
   function authError(error){
-    console.log('Authentication Error:', error);
+    response.json({ status: false, message: error });
   }
 
 };
