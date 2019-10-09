@@ -9,17 +9,20 @@ let User = require('../../models/auth/user-model');
 authRoute.post('/signup', signUp);
 authRoute.post('/signin', authenticate, signIn);
 
-function signUp(request, response, next){
+function signUp(request, response){
   let newUser = new User(request.body);
   newUser.save()
     .then(user => {
-      response.status(200).json(user);
+      console.log( user );
+      response.status(200).json({ status: true, message: user.username });
     })
-    .catch( error => next(error));
+    .catch(error => {
+      response.json({ status: false, message: error });
+    });
 }
 
 function signIn(request, response){
-  response.status(200).json({user:request.user, token:request.token});
+  response.status(200).json({ status: true, message: request.user, funPass: request.token });
 }
 
 module.exports = authRoute;

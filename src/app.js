@@ -19,7 +19,6 @@ app.use(express.urlencoded({extended:true}));
 //routes
 app.use(authRoute);
 app.use(contentRoute);
-app.get('/', (req,res)=>{res.send('im aliiiiiive');});
 
 //error middleware
 app.use('*', notFound);
@@ -30,7 +29,7 @@ module.exports = {
   start: (port) => {
     let PORT = port || process.env.PORT || 8080;
     app.listen(PORT, () => {
-      console.log(`BATTLECRUISER OPERATIONAL: ${PORT}`);
+      console.log(`💻➰➰${PORT}➰➰🔋`);
     });
   },
 };

@@ -4,11 +4,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// const capabilities = {
-//   user: [ 'create','read','update','delete' ],
-//   admin: [ 'create','read','update','delete' ],
-// };
-
 //user Schema
 const user = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -33,8 +28,8 @@ user.statics.authBasic = function(credentials){
   return this.findOne(query)
     .then(user => {
       if(user && user.comparePassword(credentials.password)){
-        return user;
-      } else console.log('Invalid password');
+        return { status: true, payload: user };
+      } else return { status: false, payload: 'Invalid username or password.'};
     })
     .catch( error => console.log('Basic Auth:', error));
 };
@@ -56,15 +51,13 @@ user.statics.authBearer = function(credentials){
     .catch(error => console.log('Bearer Auth:', error));
 };
 
-// flesh out front end first
-// user.methods.can = function(){
-//   return capabilities[this.role]
-// };
-
 // generate token
-user.methods.generateToken = function () {
+user.methods.generateToken = function (type) {
   let payload = { id: this._id };
   let options = {};
+  if( type === 'signup' ){
+    options.expiresIn = '5000ms';
+  }
   // jwt.sign( payload, secret, options);
   return jwt.sign( payload, process.env.SECRET, options );
 };

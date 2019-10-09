@@ -3,28 +3,28 @@
 const express = require('express');
 // eslint-disable-next-line new-cap
 const contentRoute = express.Router();
-const schema = require('../../models/test/test-model');
+const schema = require('../../models/todo/todo-model');
 const Crud = require('../../models/crud');
-const test = new Crud(schema);
+const todo = new Crud(schema);
+// const authenticate = require('../../middleware/authenticate-middleware');
 
-contentRoute.get('/test', getSomething);
-contentRoute.post('/test', makeSomething);
-contentRoute.put('/test', changeSomething);
-contentRoute.delete('/test', deleteSomething);
+contentRoute.get('/todo/:userID', getTodoByUserID);
+contentRoute.post('/todo/:userID', createTodo);
+contentRoute.put('/todo/:userID', changeTodo);
+contentRoute.delete('/todo/:userID', deleteTodo);
 
-function getSomething (request, response, next){
-  if(request.query.id){
-    return test.getById(request.query.id)
-      .then(data => {
-        response.status(200).json(data);
-      })
-      .catch(error => next(error));
-  } else response.send({ message: `Could not get!`});
+function getTodoByUserID(request, response, next){
+  const userID = request.params.userID;
+  return todo.getByUserID(userID)
+    .then(data => {
+      response.json(data);
+    })
+    .catch(error => next(error));
 }
 
-function makeSomething (request, response, next){
+function createTodo (request, response, next){
   if(request.body){
-    return test.create(request.body)
+    return todo.create(request.body)
       .then(newRecord => {
         response.status(200).json(newRecord);
       })
@@ -32,9 +32,9 @@ function makeSomething (request, response, next){
   } else response.send({ message: `Could not create!` });
 }
 
-function changeSomething (request, response, next){
+function changeTodo (request, response, next){
   if(request.query.id && request.body){
-    return test.update(request.query.id, request.body)
+    return todo.update(request.query.id, request.body)
       .then(updatedThing => {
         response.status(200).json(updatedThing);
       })
@@ -42,9 +42,9 @@ function changeSomething (request, response, next){
   } else response.send({ message: `Could not update!` });
 }
 
-function deleteSomething (request, response, next){
+function deleteTodo (request, response, next){
   if(request.query.id){
-    return test.delete(request.query.id)
+    return todo.delete(request.query.id)
       .then(deletedItem => {
         response.status(200).json(deletedItem);
       })

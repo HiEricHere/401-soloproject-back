@@ -11,16 +11,10 @@ class Crud {
     return record.save();
   }
 
-  getById(id){
-    if(id){
-      return this.Schema.findById(id);
-    } else return { message: `${id}: Record not found` };
-  }
-
-  getByUser(user){
-    if(user){
-      return this.Schema.find({ user: user });
-    } else return { message: `${user}: User not found`};
+  getByUserID(userID){
+    if(userID){
+      return this.Schema.find({ userID });
+    } else return { message: `${userID}: User not found`};
   }
 
   update(id, update){
