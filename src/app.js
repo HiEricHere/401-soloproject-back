@@ -29,7 +29,7 @@ module.exports = {
   start: (port) => {
     let PORT = port || process.env.PORT || 8080;
     app.listen(PORT, () => {
-      console.log(`💻➰➰${PORT}➰➰🔋`);
+      console.log(`💻 ➰➰➰ ${PORT} ➰➰➰ 🔋`);
     });
   },
 };
