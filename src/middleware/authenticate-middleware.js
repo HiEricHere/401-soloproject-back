@@ -4,6 +4,7 @@ const User = require('../models/auth/user-model');
 
 const authenticate = function(request, response, next){
   let path = request.originalUrl.split( '/' )[1];
+  console.log(request.headers);
   let [ authType, authCredentials ] = request.headers.authorization.split(' ');
   authType = authType.toLowerCase();
   try {
@@ -42,12 +43,13 @@ const authenticate = function(request, response, next){
   function authenticateBearer(token){
     return User.authBearer(token)
       .then(user => {
-        if(user._id === request.params.userID){
-          request.user = user._id;
-          request.cookie('access_pass', token);
+        const dbID = String(user._id);
+        if(dbID === request.params.userID){
+          console.log('passed bearer auth');
+          request.user = dbID;
           next();
         } else {
-          response.send('Invalid credentials');
+          response.json({ message: 'Bearer validation error.' });
         }
       })
       .catch(error => authError(error));

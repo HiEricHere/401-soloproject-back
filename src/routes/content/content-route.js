@@ -6,12 +6,12 @@ const contentRoute = express.Router();
 const schema = require('../../models/todo/todo-model');
 const Crud = require('../../models/crud');
 const todo = new Crud(schema);
-// const authenticate = require('../../middleware/authenticate-middleware');
+const authenticate = require('../../middleware/authenticate-middleware');
 
-contentRoute.get('/todo/:userID', getTodoByUserID);
-contentRoute.post('/todo/:userID', createTodo);
-contentRoute.put('/todo/:userID', changeTodo);
-contentRoute.delete('/todo/:userID', deleteTodo);
+contentRoute.get('/todo/:userID', authenticate, getTodoByUserID);
+contentRoute.post('/todo/:userID', authenticate, createTodo);
+contentRoute.put('/todo/:userID', authenticate, changeTodo);
+contentRoute.delete('/todo/:userID', authenticate, deleteTodo);
 
 function getTodoByUserID(request, response, next){
   const userID = request.params.userID;
